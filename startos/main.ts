@@ -74,17 +74,24 @@ export const main = sdk.setupMain(async ({ effects }) => {
         subcontainer: elementsSub,
         exec: {
           fn: async () => {
-            // Try to load it first; if it doesn't exist, create it.
+            // Try to load it first; if it doesn't exist, create it. Both pass
+            // load_on_startup=true so elementsd pins the wallet in its
+            // settings.json — the wallet then loads with the daemon even if
+            // this oneshot races a slow start (e.g. elementsd mid-IBD, where
+            // loadwallet can time out and leave the wallet unloaded).
             const load = await elementsSub.exec([
               ...elementsCliArgs(),
               'loadwallet',
               defaultWallet,
+              'true',
             ])
             if (load.exitCode !== 0) {
               const create = await elementsSub.exec([
                 ...elementsCliArgs(),
+                '-named',
                 'createwallet',
-                defaultWallet,
+                `wallet_name=${defaultWallet}`,
+                'load_on_startup=true',
               ])
               if (create.exitCode === 0 && !store.walletCreated) {
                 await storeJson.merge(effects, { walletCreated: true })
