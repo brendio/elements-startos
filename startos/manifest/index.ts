@@ -5,7 +5,7 @@ export const manifest = setupManifest({
   id: 'elements',
   title: 'Elements (Liquid)',
   license: 'MIT',
-  packageRepo: 'https://github.com/Start9Labs/elements-startos',
+  packageRepo: 'https://github.com/brendio/elements-startos',
   upstreamRepo: 'https://github.com/ElementsProject/elements',
   marketingUrl: 'https://liquid.net/',
   donationUrl: null,
